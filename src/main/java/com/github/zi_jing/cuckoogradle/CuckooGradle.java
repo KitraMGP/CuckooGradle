@@ -6,9 +6,8 @@ import org.gradle.api.Project;
 public class CuckooGradle implements Plugin<Project> {
 
 	@Override
-	public void apply(Project paramT) {
-		// TODO 自动生成的方法存根
-
+	public void apply(Project proj) {
+		System.out.println("Test Plugin");
 	}
 
 }
