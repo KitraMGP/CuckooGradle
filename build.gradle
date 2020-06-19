@@ -5,10 +5,12 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
+// 在这里更改版本
 version = '1.0.0'
 group = 'com.github.zi_jing.cuckoogradle'
+archivesBaseName = 'CuckooGradle'
 
 dependencies {
     compile gradleApi()
@@ -31,14 +33,29 @@ tasks.withType(JavaCompile) {
 	options.encoding = 'UTF-8'
 }
 
-uploadArchives {
+task sourceJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier 'sources'
+}
+
+publishing {
+	publications {
+		cuckooLib(MavenPublication) {
+			artifact jar
+			artifact sourceJar
+			pom {
+				groupId = project.group
+				artifactId = archivesBaseName
+				version = project.version
+				description = project.description
+			}
+		}
+	}
 	repositories {
-		mavenDeployer {
-			if(project.hasProperty('localMvnPath')) {
-				pom.groupId = project.group
-				pom.artifactId = 'CuckooGradle'
-				pom.version = project.version
-				repository(url: uri(project.properties.localMvnPath))
+		if (project.hasProperty('localPublishMavenPath')) {
+			maven {
+				name = 'CuckooMaven'
+				url = uri(project.properties.localPublishMavenPath)
 			}
 		}
 	}
