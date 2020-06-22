@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'com.gradle.plugin-publish' version '0.12.0'
+    id 'java-gradle-plugin'
 }
 
 // 在这里更改版本
@@ -28,10 +28,6 @@ compileJava {
     sourceCompatibility = targetCompatibility = '1.8'
 }
 
-shadowJar {
-    classifier ''
-}
-
 javadoc.options.encoding = 'UTF-8'
 compileJava.options.encoding = 'UTF-8'
 tasks.withType(JavaCompile) {
@@ -49,37 +45,36 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives shadowJar
+    archives jar
     archives sourceJar
     archives javadocJar
 }
 
-publishing {
-    publications {
-        cuckooLib(MavenPublication) {
-            artifact shadowJar
-            artifact sourceJar
-            artifact javadocJar
-            pom {
-                groupId = project.group
-                artifactId = archivesBaseName
-                version = project.version
-                description = project.description
-            }
-        }
-    }
-    repositories {
-        if (project.hasProperty('localPublishMavenPath')) {
-            maven {
-                name = 'CuckooMaven'
-                url = uri(project.properties.localPublishMavenPath)
-            }
+jar {
+    from sourceSets.main.output
+}
+
+gradlePlugin {
+    plugins {
+        cuckoogradlePlugin {
+            id = 'com.github.zi_jing.cuckoogradle'
+            implementationClass = 'com.github.zi_jing.cuckoogradle.CuckooGradle'
         }
     }
 }
 
-jar {
-    from sourceSets.main.output
-    from sourceSets.main.allSource
+pluginBundle {
+    website = 'https://github.com/zi-jing/CuckooGradle'
+    vcsUrl = 'https://github.com/zi-jing/CuckooGradle'
+    description = 'The Gradle plugin for publishing libraries to the CuckooMaven'
+    tags = ['publish', 'minecraft']
+
+    plugins {
+        cuckoogradlePlugin {
+            displayName = 'CuckooGradle plugin'
+        }
+    }
 }
+
+
 
