@@ -15,7 +15,7 @@ public class CuckooGradle implements Plugin<Project> {
         project = proj;
         System.out.println("Loading plugin CuckooGradle...");
         System.out.println("#####################################################");
-        System.out.println("                      CuckooGradle INCLUDED BUILD                  ");
+        System.out.println("                      CuckooGradle                   ");
         System.out.println("        https://github.com/zi-jing/CuckooGradle      ");
         System.out.println("#####################################################");
         System.out.println("Project name: " + proj.getName());
